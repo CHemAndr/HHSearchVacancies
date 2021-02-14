@@ -1,7 +1,6 @@
 package hh.home;
 
 import org.openqa.selenium.WebDriver;
-//import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -13,46 +12,39 @@ import java.util.concurrent.TimeUnit;
 public class HhSearchVacancy {
 
        public static void main(String[] args) {
-              long tmStart = System.currentTimeMillis();
+              //long tmStart = System.currentTimeMillis();
               HhSearchVacancy searchVacancy = new HhSearchVacancy();
               List<Vacancy> vacancy = new ArrayList<Vacancy>();
               //Запуск Webdriver и стартовой страницы
               WebDriver driver = searchVacancy.setupAndStartWebDriver();
+              //Создание необходимых страниц
               StartPage startPage = new StartPage(driver);
               RegionsPage regionsPage = new RegionsPage(driver);
               VacanciesPage vacanciesPage = new VacanciesPage(driver);
-
+              //Поиск вакансий в Москве
               if (!startPage.getRegionCityName().equals("Москва")) {
                       startPage.clickSelectRegionButton();
-                      System.out.println("Шаг 0");
                       if (regionsPage.setCityName("Москва")) {
-                        System.out.println("Шаг 1");
                         startPage.inputTextInSearchString("Java Selenium");
-                        //startPage.inputTextInSearchString("Ъ");
-                        System.out.println("Шаг 2");
                         startPage.clickSearchButton();
-                        System.out.println("Шаг 3");
                         while (vacanciesPage.getVacanciesOnPage(vacancy));
                         System.out.println(vacancy.size());
-                        long tmStop = System.currentTimeMillis();
-                        System.out.println("Длительность: " + (tmStop-tmStart));
+                        //long tmStop = System.currentTimeMillis();
+                        //System.out.println("Длительность: " + (tmStop-tmStart));
                       } else {System.out.println("Заданного города нет в списке доступных");}
                }
        }
 
        public WebDriver setupAndStartWebDriver() {
-
-              //HtmlUnitDriver driver;
-              //driver = new HtmlUnitDriver();
               //определение драйвера браузера (path берем из файла конфигурации)
               System.setProperty("webdriver.chrome.driver", ConfProperties.getProperty("chromedriver"));
-              //Попытка запуска браузера в фоновом режиме (без окна)
+              //Разные варианты запуска браузера
               ChromeOptions options = new ChromeOptions();
               //options.addArguments("--no-startup-window");
               //options.addArguments("no-startup-window");
-              //options.addArguments("--headless"); //- закончилось плохо
-              //options.addArguments("--incognito"); //- закончилось плохо
-              options.addArguments("--start-maximized"); //- закончилось плохо
+              //options.addArguments("--headless");
+              //options.addArguments("--incognito");
+              options.addArguments("--start-maximized");
               DesiredCapabilities capabilities = new DesiredCapabilities();
               capabilities.setCapability(ChromeOptions.CAPABILITY, options);
               options.merge(capabilities);

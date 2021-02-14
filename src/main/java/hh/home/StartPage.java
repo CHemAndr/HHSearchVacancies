@@ -18,7 +18,7 @@ public class StartPage {
         this.driver = driver;
     }
 
-    //Элементы страницы
+    //======================Элементы страницы============================
 
     //Строка ввода критерия поика
     @FindBy(xpath = "//input[@name = 'text']")
@@ -31,11 +31,8 @@ public class StartPage {
     //Кнопка выбора города региона
     @FindBy(xpath = "//button[@data-qa = 'mainmenu_areaSwitcher']/div")
     public WebElement selectRegionButton;
-    //@FindBy(xpath = "//span[text()='Выбрать другой']")
-    //public WebElement selectRegionButton;
 
-
-    //Методы работы с элементами страницы
+    //=========================Методы работы с элементами страницы==========
 
     //Ввод текста в строку поиска
     public void inputTextInSearchString(String text){

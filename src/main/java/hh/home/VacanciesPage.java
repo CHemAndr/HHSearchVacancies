@@ -40,9 +40,7 @@ public class VacanciesPage {
     @FindBy(xpath = "//a[text() = 'дальше']")
     public WebElement nextButton;
 
-    //========================end of elements=========================================================
-
-    //========================Методы работы с элементами страницы=====================================
+    //========================Методы работы с элементами страницы=======================
 
     //Получить данные по всем вакансиям
     public boolean getVacanciesOnPage(List<Vacancy> vacancy) {
@@ -53,20 +51,22 @@ public class VacanciesPage {
                                           .findElements(By.xpath("//div[@data-qa = 'vacancy-serp__vacancy']"));
         System.out.println("Количество вакансий на странице: " + listOfVacancies.size());
         for (int i=0; i < listOfVacancies.size(); i++) {
-            String [] arrayValuesParams = getVacancyParams(listOfVacancies, i);
+            String[] arrayValuesParams = getVacancyParams(listOfVacancies, i);
             vacancy.add(new Vacancy(arrayValuesParams));
         }
+        //Если кнопка "далее" присутствует, то переход на новую страницу
         if (isElementPresent(By.xpath("//a[text() = 'дальше']"))) {
             nextButton.click();
             return true;
         }
-        isElPres(listOfVacancies, 0);
+        //Все страницы обработаны
+        isPresentElement(listOfVacancies, 0);
         return false;
     }
 
     //Получить данные по вакансии
     public String[] getVacancyParams(List<WebElement> listOfVacancies, int i) {
-        String [] arrayValuesParams = {"","","","","","",""};
+        String[] arrayValuesParams = {"","","","","","",""};
         System.out.println("Вакансия " + i);
         String nameOfVacancy = listOfVacancies.get(i)
                 .findElement(By.xpath(".//a[@data-qa = 'vacancy-serp__vacancy-title']"))
@@ -77,7 +77,7 @@ public class VacanciesPage {
         //С проверкой на наличие элемента
         String sizeOfSalary = "";
         //if (isExist(listOfVacancies.get(i),By.xpath(".//span[@data-qa = 'vacancy-serp__vacancy-compensation']"))){
-        if (isElPres(listOfVacancies,i)){
+        if (isPresentElement(listOfVacancies,i)){
                    sizeOfSalary = listOfVacancies.get(i)
                    .findElement(By.xpath(".//span[@data-qa = 'vacancy-serp__vacancy-compensation']"))
                    .getText();
@@ -118,7 +118,7 @@ public class VacanciesPage {
         return arrayValuesParams;
     }
 
-    //Проверка наличия элемента-параметра
+    //Проверка наличия элемента-параметра (вариант 1)
     public boolean isExist (WebElement element, By by) {
         List<WebElement> listElements = element.findElements(by);//задержа на explicit wait
         if (listElements.size() > 0){
@@ -129,7 +129,7 @@ public class VacanciesPage {
         }
     }
 
-    //Проверка наличия элемента-параметра
+    //Проверка наличия элемента-параметра (вариант 2)
     public boolean isElementPresent(By by) {
         try {
             driver.findElement(by);
@@ -139,15 +139,9 @@ public class VacanciesPage {
         }
     }
 
-    public boolean isElPres(List<WebElement> listOfVacancies, int i) {
+    //Проверка наличия элемента-параметра (вариант 3)
+    public boolean isPresentElement(List<WebElement> listOfVacancies, int i) {
         String htmlString = listOfVacancies.get(i).getAttribute("innerHTML");
-        //String htmlSt0 = listOfVacancies.get(0).getAttribute("innerHTML");
-        //String htmlSt1 = listOfVacancies.get(1).getAttribute("innerHTML");
-        //System.out.println("htmlSt0 " + htmlSt0.contains("vacancy-serp__vacancy-compensation") );
-        //System.out.println(htmlSt0);
-        //System.out.println("htmlSt1 " + htmlSt1.contains("vacancy-serp__vacancy-compensation"));
-        //System.out.println(htmlSt1);
-
         return htmlString.contains("vacancy-serp__vacancy-compensation");
     }
 }
